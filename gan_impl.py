@@ -29,7 +29,7 @@ class ClassicGan(gan.Gan):
 
         self.discriminator_score = tf.reduce_mean(
             tf.math.log(self.true_guess) + tf.math.log(1 - self.false_guess))
-        self.generator_score = tf.reduce_mean(tf.math.log(self.false_guess))
+        self.generator_score = tf.reduce_mean(1 - tf.math.log(self.false_guess))
 
         discriminator_variables = tf.get_collection(
             tf.GraphKeys.TRAINABLE_VARIABLES,
@@ -40,7 +40,7 @@ class ClassicGan(gan.Gan):
 
         discriminator_gradients = tf.gradients(-self.discriminator_score,
                                                discriminator_variables)
-        generator_gradients = tf.gradients(-self.generator_score,
+        generator_gradients = tf.gradients(self.generator_score,
                                            generator_variabels)
 
         self.discriminator_optimizer = tf.train.AdamOptimizer(
